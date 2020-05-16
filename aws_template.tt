@@ -28,13 +28,20 @@
               <li class="list-group-item">
                 <a class="text-decoration-none" href="https://docs.aws.amazon.com/IAM/latest/UserGuide/list_[% action.service.replace(' ', '').lower %].html#[% service.replace(' ', '').lower _ '-' _ action.action.remove('\w+:') %]">[% action.action %]</a>
                 <div class="float-right">
-                  <button type="button" class="btn btn-sm defaultcurse alert-[% IF action.resources.size > 0 %]primary">[% ELSE %]secondary disabled" disabled>[% END %]
-                    Resources <span class="badge badge-light">[% action.resources.size %]</span>
+                  [%- unique_resources = [] -%]
+                  [%- FOREACH resource IN action.resources -%]
+                    [%- IF resource.resourcetype != "" -%]
+                      [%- unique_resources.push(resource) %]
+                    [%- END -%]
+                  [%- END -%]
+
+                  <button type="button" class="btn btn-sm defaultcurse alert-[% IF unique_resources.size > 0 %]primary">[% ELSE %]secondary disabled" disabled>[% END %]
+                    Resources <span class="badge badge-light">[% unique_resources.size %]</span>
                   </button>
                   [%- unique_conditions = {} -%]
                   [%- FOREACH resource IN action.resources -%]
                     [%- FOREACH condition IN resource.conditions -%]
-                      [%- unique_conditions.$condition.key = 1 -%]
+                      [%- unique_conditions.${condition.key} = 1 -%]
                     [%- END -%]
                   [%- END -%]
                   <button type="button" class="btn btn-sm defaultcurse alert-[% IF unique_conditions.keys.size > 0 %]primary">[% ELSE %]secondary disabled" disabled>[% END %]
