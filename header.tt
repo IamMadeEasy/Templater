@@ -1,0 +1,46 @@
+<html>
+  <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-122656840-2"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-122656840-2');
+    </script>
+
+    <title>Iam Made Easy</title>
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet">
+    <style type="text/css">
+      .btn { cursor: default; }
+      [type=button]:not(:disabled), [type=reset]:not(:disabled), [type=submit]:not(:disabled), button:not(:disabled) {
+        cursor: default;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col">
+          <h1>Iam Made Easy</h1>
+          <p>Every IAM action in one place making it easy to find the documentation for the action you care about.</p>
+          <p>For support send an e-mail to <a href="mailto:Bhuman_iammATadeeasy^com" onClick="var start = this.href; this.href = this.href.replace('AT', ''); this.href = this.href.replace('B', ''); this.href = this.href.replace('^', '.'); this.href = this.href.replace('_', '@'); this.innerHTML = this.href.replace('mailto:', ''); if (start != this.href) {return false}">(click to unscramble)</a></p>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col">
+          <ul class="nav nav-pills">
+            <li class="nav-item">
+              <a class="nav-link[% IF aws == 1 %] active[% END %]" href="index.html">AWS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link[% IF azure == 1 %] active[% END %]" href="azure.html">Azure</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link[% IF gcp == 1 %] active[% END %]" href="gcp.html">GCP</a>
+            </li>
+          </ul>
+        </div>
+      </div>

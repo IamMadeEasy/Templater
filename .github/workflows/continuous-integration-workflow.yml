@@ -1,0 +1,58 @@
+name: Run templater
+on:
+  push:
+  pull_request:
+    types:
+      - created
+  schedule:
+    - cron: '15 1 * * 2'
+jobs:
+  run_templating:
+    name: Runs templating
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out code
+        uses: actions/checkout@v2
+      - name: Installing the awscli so we can download and upload artifacts to s3
+        run: sudo pip install -U awscli
+      - name: Grab the latest iam.yml
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp s3://beta.${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
+        if: github.ref == 'refs/heads/develop'
+      - name: Grab the latest iam.yml
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
+        if: github.ref == 'refs/heads/master'
+      - name: Install perl dependencies
+        run: sudo apt install libtemplate-perl cpanminus
+      - name: Install more dependencies
+        run: sudo cpanm -i YAML 
+      - name: Run the AWS templater
+        run: perl ./aws_template.pl
+      - name: Run the Azure templater
+        run: perl ./azure_template.pl
+      - name: Run the GCP templater
+        run: perl ./gcp_template.pl
+      - name: Uploading artifact so we can grab it in a deploy job
+        uses: actions/upload-artifact@v2
+        with:
+          name: html
+          path: ./*.html
+  upload_assets:
+    name: Upload assets
+    needs: run_templating
+    runs-on: ubuntu-latest
+    if: (github.event_name == 'push' || github.event_name == 'schedule') && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')
+    steps:
+      - name: Grab html files from build job
+        uses: actions/download-artifact@v1
+        with:
+          name: html
+      - name: Installing the awscli so we can upload artifacts to s3
+        run: sudo pip install -U awscli
+      - name: Upload HTML 
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp --acl public-read --recursive --exclude "*" --include "*.html" ./ s3://beta.${{ secrets.AWS_S3_BUCKET }}/
+        working-directory: ./html
+        if: github.ref == 'refs/heads/develop'
+      - name: Upload HTML 
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp --acl public-read --recursive --exclude "*" --include "*.html" ./ s3://${{ secrets.AWS_S3_BUCKET }}/
+        working-directory: ./html
+        if: github.ref == 'refs/heads/master'

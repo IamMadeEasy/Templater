@@ -1,0 +1,11 @@
+[% INCLUDE "header.tt" %]
+
+<div class="row justify-content-center">
+  <div class="col">
+    <p>
+      Coming someday...
+    </p>
+  </div>
+</div>
+
+[% INCLUDE "footer.tt" %]
