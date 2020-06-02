@@ -17,7 +17,7 @@ jobs:
         run: sudo pip install -U awscli
       - name: Grab the latest iam.yml
         run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp s3://beta.${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref != 'refs/heads/master'
       - name: Grab the latest iam.yml
         run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }} AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }} aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
         if: github.ref == 'refs/heads/master'
