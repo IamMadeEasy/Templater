@@ -3,7 +3,7 @@ on:
   push:
   pull_request:
     types:
-      - created
+      - opened
   schedule:
     - cron: '15 1 * * 1'
 jobs:
