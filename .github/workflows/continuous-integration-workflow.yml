@@ -46,7 +46,7 @@ jobs:
     name: Upload assets
     needs: run_templating
     runs-on: ubuntu-latest
-    if: ((github.event_name == 'push' || github.event_name == 'schedule') && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')) || github.event.inputs.deploy == true
+    if: ((github.event_name == 'push' || github.event_name == 'schedule') && (github.ref == 'refs/heads/develop' || github.ref == 'refs/heads/master')) || github.event.inputs.deploy == 'true'
     steps:
       - name: Grab html files from build job
         uses: actions/download-artifact@v1
