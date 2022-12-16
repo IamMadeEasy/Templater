@@ -30,10 +30,10 @@ jobs:
       - name: Installing the awscli so we can download and upload artifacts to s3
         run: sudo pip install -U awscli
       - name: Grab the latest iam.yml
-        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} aws s3 cp s3://beta.${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_REGION}} aws s3 cp s3://beta.${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
         if: github.ref != 'refs/heads/master'
       - name: Grab the latest iam.yml
-        run: AWS_DEFAULT_REGION=${{ secrets.AWS_S3_REGION}} aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
+        run: AWS_DEFAULT_REGION=${{ secrets.AWS_REGION}} aws s3 cp s3://${{ secrets.AWS_S3_BUCKET }}/iam.yml iam.yml
         if: github.ref == 'refs/heads/master'
       - name: Install perl dependencies
         run: sudo apt install libtemplate-perl cpanminus
