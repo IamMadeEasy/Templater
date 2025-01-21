@@ -72,9 +72,7 @@ jobs:
         run: sudo pip install -U awscli
       - name: Upload HTML 
         run: AWS_DEFAULT_REGION=${{ secrets.AWS_REGION}} aws s3 cp --recursive --exclude "*" --include "*.html" ./ s3://beta.${{ secrets.AWS_S3_BUCKET }}/
-        working-directory: ./html
         if: github.ref == 'refs/heads/develop'
       - name: Upload HTML 
         run: AWS_DEFAULT_REGION=${{ secrets.AWS_REGION}} aws s3 cp --recursive --exclude "*" --include "*.html" ./ s3://${{ secrets.AWS_S3_BUCKET }}/
-        working-directory: ./html
         if: github.ref == 'refs/heads/master'
